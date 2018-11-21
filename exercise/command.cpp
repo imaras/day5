@@ -1,7 +1,12 @@
 #include "pch.h"
 #include "command.h"
+#include "sequence.h"
 
-bool help::execute()
+command::~command()
+{
+}
+
+bool help::execute() const
 {
 	std::cout
 		<< "Sequence Help" << std::endl
@@ -16,37 +21,43 @@ bool help::execute()
 	return true;
 }
 
-bool add_block::execute()
+bool add_block::execute() const
 {
-	return false;
+	sequence s;
+	return s.add(type, parameters);
 }
 
-bool remove_block::execute()
+bool remove_block::execute() const
 {
-	return false;
+	sequence s;
+	return s.remove(index);
 }
 
-bool front_block::execute()
+bool front_block::execute() const
 {
-	return false;
+	sequence s;
+	return s.front(index);
 }
 
-bool print_seq::execute()
+bool print_seq::execute() const
 {
-	return false;
+	sequence s;
+	return s.print();
 }
 
-bool eval_value::execute()
+bool eval_value::execute() const
 {
-	return false;
+	sequence s;
+	return s.eval(value);
 }
 
-bool eval_file::execute()
+bool eval_file::execute() const
 {
-	return false;
+	sequence s;
+	return s.eval(input, output);
 }
 
-std::optional<int> parse_int(std::string s)
+std::optional<int> parse_int(const std::string& s)
 {
 	try
 	{
@@ -58,7 +69,7 @@ std::optional<int> parse_int(std::string s)
 	}
 }
 
-std::optional<double> parse_double(std::string s)
+std::optional<double> parse_double(const std::string& s)
 {
 	try
 	{
@@ -73,16 +84,16 @@ std::optional<double> parse_double(std::string s)
 std::unique_ptr<command> create_add_block(int argc, char* argv[])
 {
 	// get type
-	std::string types(argv[2]);
-	std::optional<int> type = parse_int(types);
+	const std::string type_s(argv[2]);
+	std::optional<int> type = parse_int(type_s);
 	if(!type.has_value())
 	{
 		return nullptr;
 	}
 
 	// get parameters
-	std::string parameters(argv[3]);
-	for (int i = 4; i < argc; i++)
+	std::string parameters;
+	for (int i = 3; i < argc; i++)
 	{
 		parameters.append(" ");
 		parameters.append(argv[i]);
@@ -94,24 +105,24 @@ std::unique_ptr<command> create_add_block(int argc, char* argv[])
 std::unique_ptr<command> create_remove_block(char* argv[])
 {
 	// get index
-	std::string indexs(argv[2]);
-	std::optional<int> index = parse_int(indexs);
+	const std::string index_s(argv[2]);
+	std::optional<int> index = parse_int(index_s);
 	return index.has_value() ? std::make_unique<remove_block>(index.value()) : nullptr;
 }
 
 std::unique_ptr<command> create_front_block(char* argv[])
 {
 	// get index
-	std::string indexs(argv[2]);
-	std::optional<int> index = parse_int(indexs);
+	const std::string index_s(argv[2]);
+	std::optional<int> index = parse_int(index_s);
 	return index.has_value() ? std::make_unique<front_block>(index.value()) : nullptr;
 }
 
 std::unique_ptr<command> create_eval_value(char* argv[])
 {
 	// get value
-	std::string values(argv[2]);
-	std::optional<int> value = parse_double(values);
+	const std::string value_s(argv[2]);
+	std::optional<double> value = parse_double(value_s);
 	return value.has_value() ? std::make_unique<eval_value>(value.value()) : nullptr;
 }
 
@@ -136,7 +147,7 @@ std::unique_ptr<command> create_command(int argc, char* argv[])
 	{
 		return std::make_unique<help>();
 	}
-	else if (argc >= 4 && command.compare("--add") == 0)
+	else if (argc >= 3 && command.compare("--add") == 0)
 	{
 		return create_add_block(argc, argv);
 	}

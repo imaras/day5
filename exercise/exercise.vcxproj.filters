@@ -24,6 +24,9 @@
     <ClInclude Include="command.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sequence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -36,6 +39,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="command.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sequence.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
