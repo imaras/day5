@@ -39,12 +39,12 @@ bool sequence::add(int type, const std::string& parameters)
 	return result;
 }
 
-bool sequence::check_index(int index) const
+bool sequence::check_index(size_t index) const
 {
 	return 0 < index && index < blocks.size() - 1;
 }
 
-bool sequence::remove(int index)
+bool sequence::remove(size_t index)
 {
 	bool result = false;
 
@@ -59,7 +59,7 @@ bool sequence::remove(int index)
 	return result;
 }
 
-bool sequence::front(int index)
+bool sequence::front(size_t index)
 {
 	bool result = false;
 
