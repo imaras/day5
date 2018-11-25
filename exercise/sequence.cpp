@@ -10,8 +10,6 @@ sequence::sequence(std::string file) : file(file)
 	{
 		blocks.push_back(create_block(type, fs));
 	}
-
-	fs.close();
 }
 
 sequence::~sequence()
@@ -21,7 +19,6 @@ sequence::~sequence()
 	{
 		fs << **it;
 	}
-	fs.close();
 }
 
 bool sequence::add(int type, const std::string& parameters)
@@ -41,7 +38,7 @@ bool sequence::add(int type, const std::string& parameters)
 
 bool sequence::check_index(size_t index) const
 {
-	return 0 < index && index < blocks.size() - 1;
+	return 0 <= index && index <= blocks.size() - 1;
 }
 
 bool sequence::remove(size_t index)
@@ -76,11 +73,11 @@ bool sequence::front(size_t index)
 	return result;
 }
 
-bool sequence::print() const
+bool sequence::print(std::ostream& os) const
 {
 	for (auto it = blocks.begin(); it != blocks.end(); ++it)
 	{
-		std::cout << **it << std::endl;
+		os << **it;
 	}
 
 	return true;
@@ -97,34 +94,30 @@ double sequence::eval_impl(double input) const
 	return result;
 }
 
-bool sequence::eval(double value) const
+bool sequence::eval(double value, std::ostream& os) const
 {
 	bool result = false;
 
 	if (blocks.size() > 0)
 	{
-		std::cout << eval_impl(value);
+		os << eval_impl(value);
 		result = true;
 	}
 	
 	return result;
 }
 
-bool sequence::eval(const std::string& input, const std::string& output) const
+bool sequence::eval(std::istream& is, std::ostream& os) const
 {
 	bool result = false;
 
 	if (blocks.size() > 0)
 	{
-		std::ifstream file_in(input);
-		std::ofstream file_out(output);
-
 		double value;
-		while (file_in >> value && file_out << eval_impl(value) << " ") {}
-
-		file_in.close();
-		file_out.close();
-
+		while (is >> value) 
+		{
+			os << eval_impl(value) << " ";
+		}
 		result = true;
 	}
 

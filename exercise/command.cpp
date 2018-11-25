@@ -21,40 +21,45 @@ bool help::execute() const
 	return true;
 }
 
+const std::string file_name = "local.txt";
+
 bool add_block::execute() const
 {
-	sequence s;
+	sequence s(file_name);
 	return s.add(type, parameters);
 }
 
 bool remove_block::execute() const
 {
-	sequence s;
+	sequence s(file_name);
 	return s.remove(index);
 }
 
 bool front_block::execute() const
 {
-	sequence s;
+	sequence s(file_name);
 	return s.front(index);
 }
 
 bool print_seq::execute() const
 {
-	sequence s;
-	return s.print();
+	sequence s(file_name);
+	return s.print(std::cout);
 }
 
 bool eval_value::execute() const
 {
-	sequence s;
-	return s.eval(value);
+	sequence s(file_name);
+	return s.eval(value, std::cout);
 }
 
 bool eval_file::execute() const
 {
-	sequence s;
-	return s.eval(input, output);
+	std::ifstream in(input);
+	std::ofstream out(output);
+
+	sequence s(file_name);
+	return s.eval(in, out);
 }
 
 std::optional<int> parse_int(const std::string& s)

@@ -9,6 +9,8 @@
 
 // Headers for CppUnitTest
 #include "CppUnitTest.h"
+#include <cstdio>
 #include <typeindex>
+#include <vector>
 
 // TODO: reference additional headers your program requires here
